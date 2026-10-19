@@ -1,0 +1,29 @@
+# Entorno
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Datos: el dataset no se versiona (523 MB comprimido)
+data/raw/
+*.tar.gz
+*.zip
+
+# Datos intermedios: se regeneran ejecutando el cuaderno.
+# X_train.npy solo pesa 233 MB, muy por encima del limite de GitHub.
+data/*.npy
+data/*.json
+
+# Material interno: guiones, generadores, pauta y notas.
+# Nunca debe subirse al repositorio publico.
+_interno/
+
+# Archivos temporales y logs
+*.log
+*~
+Thumbs.db
+.DS_Store
+
+# El modelo entrenado si pesa poco se puede versionar; si no, se ignora
+# models/*.keras
