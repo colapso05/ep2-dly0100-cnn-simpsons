@@ -142,10 +142,40 @@ El tamaño de la muestra se eligió con datos, no al azar: con 3.500 imágenes e
 antes de generalizar** (brecha de 0,84 y todas las configuraciones dando lo mismo), y con 8.000
 llegaba a 0,73. Con 6.000 la comparación ya distingue.
 
-**4. Tres espacios de datos distintos, y no se mezclan.**
+**4. La parada temprana se usa al final, no al principio.**
+Configurarla con `patience=6` desde el primer entrenamiento es un error de método: esconde el
+sobreajuste en vez de resolverlo. El orden correcto es atacar primero el sobreajuste (dropout,
+BatchNorm, aumento de datos) y recién después dejar que la parada temprana elija la mejor época del
+modelo ya bien configurado. En este trabajo ocurre además un detalle que se reporta sin adornos: en
+la corrida final **la parada temprana no llegó a cortar** —el modelo completó las 25 épocas porque
+seguía mejorando— y lo que actuó fue `restore_best_weights`, que recupera los pesos de la época con
+menor pérdida de validación.
+
+**5. Tres espacios de datos distintos, y no se mezclan.**
 `train` (15.193) para aprender, `validation` (3.799) para la parada temprana y las decisiones, `test`
 (890) **solo** para la medición final. El test no participa en ninguna decisión, y por eso el número
 es honesto.
+
+## Análisis de errores
+
+Con 19 errores sobre 890 imágenes, lo relevante no es cuántos son sino **dónde están** y **cuán
+seguro estaba el modelo**:
+
+| Dato | Valor |
+|---|---|
+| Confianza media en los aciertos | **0,9760** |
+| Confianza media en los errores | **0,6984** |
+
+**Los errores están dispersos, no agrupados por parecido.** 17 de los 19 son casos únicos —un Bart
+clasificado como Edna, una Lisa como Homer, un Grampa como Homer—, y el único par que se repite es
+**Nelson clasificado como Wiggum (2 veces)**. No existe una confusión estructural entre dos personajes
+parecidos.
+
+Los peores recalls son Kent Brockman (47/50), Nelson (47/50) y Comic Book Guy (46/49); el resto está
+en 48 o 50 sobre 50. Ningún personaje queda sin reconocer.
+
+La separación entre la confianza de aciertos y de errores permite construir un sistema con umbral:
+todo lo que caiga por debajo de 0,7 se deriva a revisión humana.
 
 ## Experimentos que contiene el cuaderno
 
