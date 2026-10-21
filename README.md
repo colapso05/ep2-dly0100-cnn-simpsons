@@ -87,8 +87,15 @@ jupyter nbconvert --to notebook --execute --inplace \
   notebooks/EP2_DLY0100_CNN_Simpsons.ipynb
 ```
 
-**Tiempo esperado:** unos 75 minutos en una CPU de 8 núcleos (casi todo en entrenamientos). Con GPU
-en Colab, mucho menos.
+**Tiempo esperado:** unos 75 minutos en una CPU de 8 núcleos (casi todo en entrenamientos). Con GPU,
+mucho menos.
+
+**Una aclaración sobre la GPU.** El equipo donde se ejecutó tiene una NVIDIA GeForce GTX 1650 de 4 GB,
+pero **TensorFlow no la usó**: la versión 2.10 fue la última con soporte de GPU en Windows nativo, y
+desde la 2.11 la vía oficial es WSL2 o Linux (o el plugin TensorFlow-DirectML, con menor rendimiento).
+El paquete instalado es de CPU, y la prueba está en la salida del cuaderno:
+`tf.config.list_physical_devices("GPU")` devuelve una lista vacía. Para aprovechar la tarjeta habría
+que ejecutar en WSL2, en Linux o en Colab.
 
 El cuaderno busca los datos automáticamente en `data/raw/`, en `../data/raw/` y en `/content/data/raw`
 (para Colab), así que no hace falta editar rutas.
